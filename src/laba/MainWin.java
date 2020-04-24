@@ -24,9 +24,9 @@ public class MainWin {
 	private JList list;
 	private Disk disk;
 	static int n = 700;
-	private ArrayList<FileSystem> files = new ArrayList<FileSystem>();
-	static FileSystem fileSystem;
-	private FileSystem fs;
+	private ArrayList<File> files = new ArrayList<File>();
+	private static FileSystem selectedFile;
+	private FileSystem array = new FileSystem();
 	private JTextField textFieldFile;
 	private JTextField textFieldMeasure;
 
@@ -54,9 +54,9 @@ public class MainWin {
 	}
 	public void updateView(){
 		if (list.isSelectionEmpty()) {
-			fileSystem = null;
+			selectedFile = null;
 		} else {
-			fileSystem = ((FileSystem) list.getSelectedValue());
+			selectedFile = (FileSystem) list.getSelectedValue();
 		}
 	}
 
@@ -64,6 +64,7 @@ public class MainWin {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		files = array.getFiles();
 		disk = new Disk(n/Block.size);
 		frame = new JFrame();
 		frame.setBounds(100, 100, 730, 595);
@@ -79,9 +80,11 @@ public class MainWin {
 		JButton buttonCopy = new JButton("Дублировать");
 		buttonCopy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int ind = (Integer)list.getSelectedValue();
 				updateView();
-				if (disk.freeBlocks() >= fileSystem.getFile().getSize()) {
-					files.add(new FileSystem(fileSystem.getFile().getName() + "--копия", fileSystem.getFile().getSize(), disk));
+				if (disk.freeBlocks() >= array.getFile(ind).getSize()) {
+					files = array.addFile(selectedFile.getFile(ind).getName() 
+							+ "--копия", selectedFile.getFile(ind).getSize(), disk);
 				} else {
 					JOptionPane.showMessageDialog(null, "Недостаточно места");
 					return;
@@ -123,9 +126,9 @@ public class MainWin {
 		buttonDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				updateView();
-				fileSystem.delete(disk);
-				files.remove(fileSystem);
-				fileSystem = null;
+				array.removeFile(selectedFile);
+				files = array.getFiles();
+				selectedFile = null;
 				list.setListData(files.toArray());
 				panel.repaint();
 			}
@@ -164,11 +167,15 @@ public class MainWin {
 	}
 	public void isEnoughSpace(int size){
 		if (disk.freeBlocks() >= size) {
-			files.add(new FileSystem(textFieldFile.getText(), size, disk));
+			files = array.addFile(textFieldFile.getText(), size, disk);
 			
 		} else {
 			JOptionPane.showMessageDialog(null, "Недостаточно места");
 			return;
 		}
+	}
+
+	public static FileSystem getFileSystem() {
+		return selectedFile;
 	}
 }

@@ -1,16 +1,22 @@
 package laba;
 
+import java.awt.List;
+import java.util.ArrayList;
+
 public class FileSystem {
 	private int size;
 	private int firstBlock;
 	private File file;
+	private ArrayList<File> files;
 
-	public FileSystem(String name, int size, Disk disk) {
-		file = new File(name, size);
+	public FileSystem(){ }
+	public ArrayList<File> addFile(String name, int size, Disk disk){
+		files.add(new File(name, size));
 		firstBlock = disk.firstFree();
 		disk.getBlock(firstBlock).setState(true);
 		this.size = size;
 		initialize(size, disk);
+		return files;
 	}
 	public void initialize(int size, Disk disk){
 		int previous = -1;
@@ -30,9 +36,16 @@ public class FileSystem {
 	public int getSize() {
 		return size;
 	}
-	public File getFile(){
-		return file;
+	public File getFile(int index){
+		return files.get(index);
 	}
+	public ArrayList <File> getFiles(){
+		return files;
+	}
+	public void removeFile(FileSystem file){
+		files.remove(file);
+	}
+	
 	public int getFirstBlock() {
 		return firstBlock;
 	}
@@ -50,5 +63,6 @@ public class FileSystem {
 		if (nextBlock == null) {
 			disk.setBlockFree(id);
 		}
+		
 	}
 }
