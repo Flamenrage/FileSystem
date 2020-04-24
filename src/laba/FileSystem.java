@@ -6,6 +6,7 @@ public class FileSystem {
 	private File file;
 
 	public FileSystem(String name, int size, Disk disk) {
+		file = new File(name, size);
 		firstBlock = disk.firstFree();
 		disk.getBlock(firstBlock).setState(true);
 		this.size = size;
