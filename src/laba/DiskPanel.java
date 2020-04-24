@@ -35,9 +35,9 @@ public class DiskPanel extends JPanel {
 		g2.drawRect(0, 0, 480, 340);
 	}
 	public void drawfile(Graphics g){
-		if (MainWin.file != null) {
+		if (MainWin.fileSystem!= null) {
 			g.setColor(new Color(200, 0, 0));
-			int i = MainWin.file.getFs().getFirstBlock();
+			int i = MainWin.fileSystem.getFirstBlock();
 			for (;;) {
 				g.fillRect(i % k * weight + 2, i / k * height + 2, weight - 4, height - 4);
 				if (disk.getBlock(i).getNextBlock() == null)

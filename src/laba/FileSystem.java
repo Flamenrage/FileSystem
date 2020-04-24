@@ -1,16 +1,15 @@
 package laba;
 
 public class FileSystem {
-	private String name;
 	private int size;
 	private int firstBlock;
+	private File file;
 
-	public FileSystem(int size, Disk disk) {
-		this.size = size;
+	public FileSystem(String name, int size, Disk disk) {
 		firstBlock = disk.firstFree();
 		disk.getBlock(firstBlock).setState(true);
+		this.size = size;
 		initialize(size, disk);
-		
 	}
 	public void initialize(int size, Disk disk){
 		int previous = -1;
@@ -26,10 +25,13 @@ public class FileSystem {
 			previous = k;
 		}
 	}
+	
 	public int getSize() {
 		return size;
 	}
-
+	public File getFile(){
+		return file;
+	}
 	public int getFirstBlock() {
 		return firstBlock;
 	}

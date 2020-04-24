@@ -24,8 +24,8 @@ public class MainWin {
 	private JList list;
 	private Disk disk;
 	static int n = 700;
-	private ArrayList<File> files = new ArrayList<File>();
-	static File file;
+	private ArrayList<FileSystem> files = new ArrayList<FileSystem>();
+	static FileSystem fileSystem;
 	private FileSystem fs;
 	private JTextField textFieldFile;
 	private JTextField textFieldMeasure;
@@ -54,9 +54,9 @@ public class MainWin {
 	}
 	public void updateView(){
 		if (list.isSelectionEmpty()) {
-			file = null;
+			fileSystem = null;
 		} else {
-			file = (File) list.getSelectedValue();
+			fileSystem = ((FileSystem) list.getSelectedValue());
 		}
 	}
 
@@ -80,8 +80,8 @@ public class MainWin {
 		buttonCopy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				updateView();
-				if (disk.freeBlocks() >= file.getSize()) {
-					files.add(new File(file.getName() + "--копия", file.getSize(), disk));
+				if (disk.freeBlocks() >= fileSystem.getFile().getSize()) {
+					files.add(new FileSystem(fileSystem.getFile().getName() + "--копия", fileSystem.getFile().getSize(), disk));
 				} else {
 					JOptionPane.showMessageDialog(null, "Недостаточно места");
 					return;
@@ -123,9 +123,9 @@ public class MainWin {
 		buttonDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				updateView();
-				file.getFs().delete(disk);
-				files.remove(file);
-				file = null;
+				fileSystem.delete(disk);
+				files.remove(fileSystem);
+				fileSystem = null;
 				list.setListData(files.toArray());
 				panel.repaint();
 			}
@@ -164,7 +164,7 @@ public class MainWin {
 	}
 	public void isEnoughSpace(int size){
 		if (disk.freeBlocks() >= size) {
-			files.add(new File(textFieldFile.getText(), size, disk));
+			files.add(new FileSystem(textFieldFile.getText(), size, disk));
 			
 		} else {
 			JOptionPane.showMessageDialog(null, "Недостаточно места");
