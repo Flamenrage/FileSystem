@@ -26,6 +26,7 @@ public class MainWin {
 	static int n = 700;
 	private ArrayList<File> files = new ArrayList<File>();
 	static File file;
+	private FileSystem fs;
 	private JTextField textFieldFile;
 	private JTextField textFieldMeasure;
 
@@ -122,7 +123,7 @@ public class MainWin {
 		buttonDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				updateView();
-				file.delete(disk);
+				file.getFs().delete(disk);
 				files.remove(file);
 				file = null;
 				list.setListData(files.toArray());
